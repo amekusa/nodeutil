@@ -1,0 +1,35 @@
+{
+  "name": "@amekusa/nodeutil",
+  "version": "1.0.0",
+  "description": "Utility library for NodeJS",
+  "type": "module",
+  "exports": {
+    "import": "./dist/import/bundle.mjs",
+    "require": "./dist/require/bundle.cjs"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "setup": "develarms i",
+    "build": "rollup -c .rollup.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amekusa/nodeutil.git"
+  },
+  "author": "amekusa (https://amekusa.com)",
+  "bugs": {
+    "url": "https://github.com/amekusa/nodeutil/issues"
+  },
+  "homepage": "https://github.com/amekusa/nodeutil",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.1",
+    "develarms": "^2.2.1"
+  },
+  "develarms": {
+    "rollup": "^3.29.1"
+  }
+}

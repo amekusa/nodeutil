@@ -1,5 +1,6 @@
 {
   "name": "@amekusa/nodeutil",
+  "private": false,
   "version": "1.0.0",
   "description": "Utility library for NodeJS",
   "type": "module",
@@ -13,7 +14,8 @@
   ],
   "scripts": {
     "setup": "develarms i",
-    "build": "rollup -c .rollup.js"
+    "build": "rollup -c .rollup.js",
+    "publish": "npm publish --access=public"
   },
   "repository": {
     "type": "git",

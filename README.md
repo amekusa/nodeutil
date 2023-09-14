@@ -3,7 +3,7 @@ Utility Library for NodeJS
 
 ## Installation
 ```sh
-npm i @amekusa/nodeutil
+npm i --save-dev @amekusa/nodeutil
 ```
 
 ## Usage

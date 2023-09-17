@@ -3,6 +3,7 @@
  * @author amekusa
  */
 
+import { env } from 'node:process';
 import { exec } from 'node:child_process';
 
 const sh = {
@@ -55,6 +56,28 @@ const sh = {
 			}
 		}
 		return r.join(' ');
+	},
+
+	/**
+	 * Returns if NODE_ENV is 'production'
+	 * @param {any} [set]
+	 * @return {bool}
+	 */
+	prod(set = undefined) {
+		let value = 'production';
+		if (set != undefined) env.NODE_ENV = set ? value : '';
+		return env.NODE_ENV == value;
+	},
+
+	/**
+	 * Returns if NODE_ENV is 'development'
+	 * @param {any} [set]
+	 * @return {bool}
+	 */
+	dev(set = undefined) {
+		let value = 'development';
+		if (set != undefined) env.NODE_ENV = set ? value : '';
+		return env.NODE_ENV == value;
 	},
 
 };

@@ -1,5 +1,6 @@
 'use strict';
 
+var node_process = require('node:process');
 var node_child_process = require('node:child_process');
 var fs = require('node:fs/promises');
 var node_path = require('node:path');
@@ -61,6 +62,28 @@ const sh = {
 			}
 		}
 		return r.join(' ');
+	},
+
+	/**
+	 * Returns if NODE_ENV is 'production'
+	 * @param {any} [set]
+	 * @return {bool}
+	 */
+	prod(set = undefined) {
+		let value = 'production';
+		if (set != undefined) node_process.env.NODE_ENV = set ? value : '';
+		return node_process.env.NODE_ENV == value;
+	},
+
+	/**
+	 * Returns if NODE_ENV is 'development'
+	 * @param {any} [set]
+	 * @return {bool}
+	 */
+	dev(set = undefined) {
+		let value = 'development';
+		if (set != undefined) node_process.env.NODE_ENV = set ? value : '';
+		return node_process.env.NODE_ENV == value;
 	},
 
 };
@@ -163,7 +186,7 @@ io.stream = {
 
 };
 
-var main = {
+const main = {
 	sh,
 	io,
 };

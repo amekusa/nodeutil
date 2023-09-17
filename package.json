@@ -14,8 +14,7 @@
   ],
   "scripts": {
     "setup": "develarms i",
-    "build": "rollup -c .rollup.js",
-    "publish": "npm publish --access=public"
+    "build": "rollup -c .rollup.js"
   },
   "repository": {
     "type": "git",

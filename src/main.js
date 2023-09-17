@@ -1,7 +1,9 @@
 import sh from './sh.js';
 import io from './io.js';
 
-export default {
+const main = {
 	sh,
 	io,
 };
+
+export default main;

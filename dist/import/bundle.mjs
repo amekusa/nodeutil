@@ -47,16 +47,20 @@ const sh = {
 		let r = [];
 		for (let key in args) {
 			let value = args[key];
-			switch (typeof value) {
-			case 'boolean':
-				r.push(key);
-				break;
-			case 'number':
-				r.push(key + opts.sep + value);
-				break;
-			case 'string':
-				r.push(key + opts.sep + `"${value}"`);
-				break;
+			if (isNaN(key)) { // non-numeric key
+				switch (typeof value) {
+				case 'boolean':
+					if (value) r.push(key);
+					break;
+				case 'number':
+					r.push(key + opts.sep + value);
+					break;
+				case 'string':
+					r.push(key + opts.sep + `"${value}"`);
+					break;
+				}
+			} else { // numeric key
+				r.push(value);
 			}
 		}
 		return r.join(' ');

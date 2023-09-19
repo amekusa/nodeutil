@@ -45,7 +45,7 @@ const sh = {
 			let value = args[key];
 			switch (typeof value) {
 			case 'boolean':
-				r.push(key);
+				if (value) r.push(key);
 				break;
 			case 'number':
 				r.push(key + opts.sep + value);

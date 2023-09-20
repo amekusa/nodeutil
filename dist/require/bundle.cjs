@@ -29,9 +29,8 @@ const sh = {
 				console.log(`[DRYRUN] ${cmd}`);
 				return resolve();
 			}
-			node_child_process.exec(cmd, (err, stdout, stderr) => {
-				if (err) reject(stderr);
-				resolve(stdout);
+			node_child_process.exec(cmd, (err, stdout) => {
+				return err ? reject(err) : resolve(stdout);
 			});
 		});
 	},

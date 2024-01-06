@@ -5,7 +5,7 @@
 
 import assert from 'node:assert';
 
-const $ = {
+const test = {
 
 	/**
 	 * @param {function} fn
@@ -34,9 +34,9 @@ const $ = {
 		if (!(method in obj)) throw `no such method in ${className} as '${method}`;
 		let fn = obj[method].bind(obj);
 		fn.displayName = `${className}::${method}`;
-		$.testFn(fn, ...args);
+		test.testFn(fn, ...args);
 	},
 
 };
 
-export default $;
+export default test;

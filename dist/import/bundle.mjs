@@ -3,6 +3,7 @@ import { exec } from 'node:child_process';
 import fs from 'node:fs/promises';
 import { join, basename, dirname } from 'node:path';
 import { Transform } from 'node:stream';
+import assert from 'node:assert';
 
 /*!
  * Shell Utils
@@ -187,9 +188,50 @@ io.stream = {
 
 };
 
+/*!
+ * Test Utils
+ * @author amekusa
+ */
+
+
+const test = {
+
+	/**
+	 * @param {function} fn
+	 * @param {Array|object} tests
+	 * @param {string} [assertFn]
+	 */
+	testFn(fn, tests, assertFn = 'equal') {
+		if (!(assertFn in assert)) throw `no such method in assert as '${assertFn}'`;
+		describe(fn.displayName || fn.name, () => {
+			for (let i in tests) {
+				it(`${i}`, () => {
+					assert[assertFn](fn(...tests[i][0]), tests[i][1]);
+				});
+			}
+		});
+	},
+
+	/**
+	 * @param {object} obj
+	 * @param {string} method
+	 * @param {Array|object} tests
+	 * @param {string} [assertFn]
+	 */
+	testMethod(obj, method, ...args) {
+		let className = obj.constructor.name;
+		if (!(method in obj)) throw `no such method in ${className} as '${method}`;
+		let fn = obj[method].bind(obj);
+		fn.displayName = `${className}::${method}`;
+		test.testFn(fn, ...args);
+	},
+
+};
+
 const main = {
 	sh,
 	io,
+	test,
 };
 
 export { main as default };

@@ -5,6 +5,7 @@ var node_child_process = require('node:child_process');
 var fs = require('node:fs/promises');
 var node_path = require('node:path');
 var node_stream = require('node:stream');
+var assert = require('node:assert');
 
 /*!
  * Shell Utils
@@ -189,9 +190,50 @@ io.stream = {
 
 };
 
+/*!
+ * Test Utils
+ * @author amekusa
+ */
+
+
+const test = {
+
+	/**
+	 * @param {function} fn
+	 * @param {Array|object} tests
+	 * @param {string} [assertFn]
+	 */
+	testFn(fn, tests, assertFn = 'equal') {
+		if (!(assertFn in assert)) throw `no such method in assert as '${assertFn}'`;
+		describe(fn.displayName || fn.name, () => {
+			for (let i in tests) {
+				it(`${i}`, () => {
+					assert[assertFn](fn(...tests[i][0]), tests[i][1]);
+				});
+			}
+		});
+	},
+
+	/**
+	 * @param {object} obj
+	 * @param {string} method
+	 * @param {Array|object} tests
+	 * @param {string} [assertFn]
+	 */
+	testMethod(obj, method, ...args) {
+		let className = obj.constructor.name;
+		if (!(method in obj)) throw `no such method in ${className} as '${method}`;
+		let fn = obj[method].bind(obj);
+		fn.displayName = `${className}::${method}`;
+		test.testFn(fn, ...args);
+	},
+
+};
+
 const main = {
 	sh,
 	io,
+	test,
 };
 
 module.exports = main;

@@ -9,12 +9,13 @@
     "require": "./dist/require/bundle.cjs"
   },
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "scripts": {
     "setup": "develarms i",
-    "build": "rollup -c .rollup.js"
+    "build": "rollup -c rollup.js",
+    "clean": "rm -rf dist",
+    "prod": "npm run clean; NODE_ENV=production npm run build"
   },
   "repository": {
     "type": "git",

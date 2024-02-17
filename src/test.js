@@ -18,16 +18,16 @@ const test = {
 			assertFn = assert[assertFn];
 		}
 		let testCase = (c, title) => {
-			let args, expect;
+			let args, ret;
 			if (Array.isArray(c)) {
 				args = c[0];
-				expect = c[1];
+				ret = c[1];
 			} else {
 				args = c.args;
-				expect = c.expect;
+				ret = c.return;
 			}
 			it(title, () => {
-				assertFn(fn(...args), expect);
+				assertFn(fn(...args), ret);
 			});
 		}
 		describe(fn.displayName || fn.name, () => {

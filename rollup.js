@@ -2,14 +2,15 @@
  * Rollup Config
  *
  * Use with:
- *   rollup -c .rollup.js
+ *   rollup -c rollup.js
  */
 
+import {env} from 'node:process';
 import rNode from '@rollup/plugin-node-resolve';
 
 const output = {
 	name: 'nodeutil',
-	sourcemap: true,
+	sourcemap: env.NODE_ENV != 'production',
 	indent: false,
 };
 

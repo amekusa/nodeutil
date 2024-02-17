@@ -9,8 +9,8 @@ npm i --save-dev @amekusa/nodeutil
 ## Usage
 ```js
 // ESM
-import U from '@amekusa/nodeutil';
+import {io, sh, test} from '@amekusa/nodeutil';
 
 // CJS
-const U = require('@amekusa/nodeutil');
+const {io, sh, test} = require('@amekusa/nodeutil');
 ```

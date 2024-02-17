@@ -2,10 +2,8 @@ import sh from './sh.js';
 import io from './io.js';
 import test from './test.js';
 
-const main = {
+export {
 	sh,
 	io,
 	test,
 };
-
-export default main;

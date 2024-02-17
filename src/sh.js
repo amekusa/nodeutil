@@ -3,8 +3,8 @@
  * @author amekusa
  */
 
-import { env } from 'node:process';
-import { exec } from 'node:child_process';
+import {env} from 'node:process';
+import {exec as _exec} from 'node:child_process';
 
 const sh = {
 
@@ -23,7 +23,7 @@ const sh = {
 				console.log(`[DRYRUN] ${cmd}`);
 				return resolve();
 			}
-			exec(cmd, (err, stdout) => {
+			_exec(cmd, (err, stdout) => {
 				return err ? reject(err) : resolve(stdout);
 			});
 		});
@@ -85,4 +85,10 @@ const sh = {
 
 };
 
+export const {
+	exec,
+	args,
+	prod,
+	dev,
+} = sh;
 export default sh;

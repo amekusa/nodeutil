@@ -4,10 +4,9 @@
  */
 
 import fs from 'node:fs/promises';
-import { join, basename, dirname } from 'node:path';
-import { Transform } from 'node:stream';
-
-import sh from './sh.js';
+import {join, basename, dirname} from 'node:path';
+import {Transform} from 'node:stream';
+import {exec} from './sh.js';
 
 const io = {
 
@@ -16,7 +15,7 @@ const io = {
 	 * @return {Promise}
 	 */
 	clean(dir, pattern, depth = 1) {
-		return sh.exec(`find '${dir}' -type f -name '${pattern}' -maxdepth ${depth} -delete`);
+		return exec(`find '${dir}' -type f -name '${pattern}' -maxdepth ${depth} -delete`);
 	},
 
 	/**
@@ -25,7 +24,7 @@ const io = {
 	 * @return {Promise}
 	 */
 	rm(file) {
-		return fs.rm(file, { force: true, recursive: true });
+		return fs.rm(file, {force: true, recursive: true});
 	},
 
 	/**
@@ -51,7 +50,7 @@ const io = {
 			}
 			_dst = join(dst, _dst || basename(_src));
 			tasks.push(
-				fs.mkdir(dirname(_dst), { recursive: true })
+				fs.mkdir(dirname(_dst), {recursive: true})
 				.then(fs.copyFile(_src, _dst))
 			);
 		});
@@ -101,4 +100,10 @@ io.stream = {
 
 };
 
+export const {
+	clean,
+	rm,
+	copy,
+	stream,
+} = io;
 export default io;

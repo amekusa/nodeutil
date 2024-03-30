@@ -33,7 +33,7 @@ const test = {
 		describe(fn.displayName || fn.name, () => {
 			if (Array.isArray(cases)) {
 				for (let i = 0; i < cases.length; i++) {
-					testCase(cases[i], `#${i} ${args.join(', ')}`);
+					testCase(cases[i], `#${i} ${cases[i][0].join(', ')}`);
 				}
 			} else {
 				let keys = Object.keys(cases);

@@ -7,6 +7,32 @@ import assert from 'node:assert';
 
 const test = {
 
+	assertEqual(actual, expected, opts = {}) {
+		let equal, deepEqual;
+		if (opts.strict) {
+			equal = assert.strictEqual;
+			deepEqual = assert.deepStrictEqual;
+		} else {
+			equal = assert.equal;
+			deepEqual = assert.deepEqual;
+		}
+		try {
+			if (expected) {
+				switch (typeof expected) {
+				case 'object':
+					let proto = Object.getPrototypeOf(expected);
+					if (proto === Object.prototype || proto === Array.prototype)
+						return deepEqual(actual, expected);
+					return equal(actual, expected);
+				}
+			}
+			return equal(actual, expected);
+		} catch (e) {
+			if (opts.msg) e.message = opts.msg + '\n' + e.message;
+			throw e;
+		}
+	},
+
 	/**
 	 * @param {function} fn
 	 * @param {Array|object} cases
@@ -44,18 +70,44 @@ const test = {
 		});
 	},
 
-	/**
-	 * @param {object} obj
-	 * @param {string} method
-	 * @param {Array|object} tests
-	 * @param {string} [assertFn]
-	 */
-	testMethod(obj, method, ...args) {
-		let className = obj.constructor.name;
-		if (!(method in obj)) throw `no such method in ${className} as '${method}`;
-		let fn = obj[method].bind(obj);
-		fn.displayName = `${className}::${method}`;
-		test.testFn(fn, ...args);
+	testMethod(construct, method, cases, opts = {}) {
+		let testCase = (c, title) => {
+			let obj;
+			try {
+				obj = ('initArgs' in c) ? new construct(...c.initArgs) : new construct();
+			} catch (e) {
+				obj = ('initArgs' in c) ? construct(...c.initArgs) : construct();
+			}
+			if (!(method in obj)) throw `no such method as '${method}`;
+			it(title, () => {
+				let r = obj[method](...c.args);
+				if ('return' in c) { // check return value
+					test.assertEqual(r, c.return, Object.assign(opts, {msg: `return failed`}));
+				}
+				if ('props' in c) { // check properties
+					for (let k in c.props) {
+						let v = c.props[k];
+						if (!(k in obj)) assert.fail(`no such property as '${k}'`);
+						test.assertEqual(obj[k], v, Object.assign(opts, {msg: `property '${k}' failed`}));
+					}
+				}
+			});
+		}
+		describe(construct.name + ' :: ' + method, () => {
+			if (Array.isArray(cases)) {
+				for (let i = 0; i < cases.length; i++) {
+					let c = cases[i];
+					let title = `#${i}`;
+					if (Array.isArray(c.args)) title += ' ' + c.args.join(', ');
+					testCase(c, title);
+				}
+			} else {
+				let keys = Object.keys(cases);
+				for (let i = 0; i < keys.length; i++) {
+					testCase(cases[keys[i]], `#${i} ${keys[i]}`);
+				}
+			}
+		});
 	},
 
 };

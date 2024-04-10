@@ -13,6 +13,7 @@
   ],
   "scripts": {
     "setup": "develarms i",
+    "dev": "rollup -cw",
     "build": "rollup -c",
     "clean": "rm -rf dist",
     "prod": "npm run clean; NODE_ENV=production npm run build"
@@ -28,10 +29,10 @@
   "homepage": "https://github.com/amekusa/nodeutil",
   "license": "MIT",
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^15.2.1",
-    "develarms": "^2.2.1"
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "develarms": "^2.3.0"
   },
   "develarms": {
-    "rollup": "^3.29.2"
+    "rollup": "^4.14.1"
   }
 }

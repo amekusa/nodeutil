@@ -55,7 +55,7 @@ const test = {
 			it(title, () => {
 				assertFn(fn(...args), ret);
 			});
-		}
+		};
 		describe(fn.displayName || fn.name, () => {
 			if (Array.isArray(cases)) {
 				for (let i = 0; i < cases.length; i++) {
@@ -70,6 +70,12 @@ const test = {
 		});
 	},
 
+	/**
+	 * @param {function} construct - Constructor or function that returns an instance
+	 * @param {string} method - Method name
+	 * @param {object|object[]} cases - Cases
+	 * @param {object} [opts] - Options
+	 */
 	testMethod(construct, method, cases, opts = {}) {
 		let testCase = (c, title) => {
 			let obj;
@@ -92,8 +98,56 @@ const test = {
 					}
 				}
 			});
-		}
+		};
 		describe(construct.name + ' :: ' + method, () => {
+			if (Array.isArray(cases)) {
+				for (let i = 0; i < cases.length; i++) {
+					let c = cases[i];
+					let title = `#${i}`;
+					if (Array.isArray(c.args)) title += ' ' + c.args.join(', ');
+					testCase(c, title);
+				}
+			} else {
+				let keys = Object.keys(cases);
+				for (let i = 0; i < keys.length; i++) {
+					testCase(cases[keys[i]], `#${i} ${keys[i]}`);
+				}
+			}
+		});
+	},
+
+	/**
+	 * @param {function} construct - Constructor or function that returns an instance
+	 * @param {object|object[]} cases - Cases
+	 * @param {object} [opts] - Options
+	 */
+	testInstance(construct, cases, opts = {}) {
+		let testCase = (c, title) => {
+			let obj;
+			try {
+				obj = ('args' in c) ? new construct(...c.args) : new construct();
+			} catch (e) {
+				obj = ('args' in c) ? construct(...c.args) : construct();
+			}
+			it(title, () => {
+				if ('props' in c) { // check properties
+					for (let k in c.props) {
+						let v = c.props[k];
+						if (!(k in obj)) assert.fail(`no such property as '${k}'`);
+						test.assertEqual(obj[k], v, Object.assign(opts, {msg: `property '${k}' failed`}));
+					}
+				}
+				if ('test' in c) { // custom test
+					if ('testArgs' in c) {
+						if (!Array.isArray(c.testArgs)) throw `invalid test case: 'testArgs' must be an array`;
+						c.test(obj, ...c.testArgs);
+					} else {
+						c.test(obj);
+					}
+				}
+			});
+		};
+		describe(construct.name, () => {
 			if (Array.isArray(cases)) {
 				for (let i = 0; i < cases.length; i++) {
 					let c = cases[i];
@@ -115,5 +169,6 @@ const test = {
 export const {
 	testFn,
 	testMethod,
+	testInstance,
 } = test;
 export default test;

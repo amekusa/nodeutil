@@ -5,7 +5,7 @@
   "description": "Utility library for NodeJS",
   "type": "module",
   "exports": {
-    "import": "./dist/import/bundle.mjs",
+    "import": "./dist/import/bundle.js",
     "require": "./dist/require/bundle.cjs"
   },
   "files": [

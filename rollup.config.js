@@ -18,7 +18,7 @@ export default {
 	input: 'src/main.js',
 	output: [
 		{
-			file: 'dist/import/bundle.mjs',
+			file: 'dist/import/bundle.js',
 			format: 'es',
 			...output
 		},

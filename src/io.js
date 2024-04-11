@@ -1,5 +1,5 @@
-import fs from 'node:fs/promises';
-import {join, basename, dirname} from 'node:path';
+import fs from 'node:fs';
+import * as fsp from 'node:fs/promises';
 import {Transform} from 'node:stream';
 import {exec} from './sh.js';
 
@@ -9,7 +9,7 @@ import {exec} from './sh.js';
  */
 
 /**
- * Deletes the contents of the given directory
+ * Deletes the contents of the given directory.
  * @return {Promise}
  */
 export function clean(dir, pattern, depth = 1) {
@@ -17,12 +17,20 @@ export function clean(dir, pattern, depth = 1) {
 }
 
 /**
- * Deletes the given file or directory
+ * Deletes the given file or directory.
  * @param {string} file
  * @return {Promise}
  */
 export function rm(file) {
-	return fs.rm(file, {force: true, recursive: true});
+	return fsp.rm(file, {recursive: true, force: true});
+}
+
+/**
+ * Deletes the given file or directory synchronously.
+ * @param {string} file
+ */
+export function rmSync(file) {
+	return fs.rmSync(file, {recursive: true, force: true});
 }
 
 /**
@@ -32,8 +40,7 @@ export function rm(file) {
  * @return {Promise}
  */
 export function copy(src, dst) {
-	let tasks = [];
-	(Array.isArray(src) ? src : [src]).forEach(item => {
+	return Promise.all((Array.isArray(src) ? src : [src]).map(item => {
 		let _src, _dst;
 		switch (typeof item) {
 		case 'object':
@@ -47,12 +54,8 @@ export function copy(src, dst) {
 			throw 'invalid type';
 		}
 		_dst = join(dst, _dst || basename(_src));
-		tasks.push(
-			fs.mkdir(dirname(_dst), {recursive: true})
-			.then(fs.copyFile(_src, _dst))
-		);
-	});
-	return Promise.all(tasks);
+		return fsp.mkdir(dirname(_dst), {recursive: true}).then(fsp.copyFile(_src, _dst));
+	}));
 }
 
 /**

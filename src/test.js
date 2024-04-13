@@ -13,7 +13,16 @@ function invalid(...args) {
 	throw new InvalidTest(...args);
 }
 
-function assertEqual(actual, expected, opts = {}) {
+export function assertProps(obj, props, opts = {}) {
+	if (typeof props != 'object') invalid(`'props' must be an object`);
+	for (let k in props) {
+		let v = props[k];
+		if (!(k in obj)) assert.fail(`no such property as '${k}'`);
+		assertEqual(obj[k], v, merge({msg: `property '${k}' failed`}, opts));
+	}
+}
+
+export function assertEqual(actual, expected, opts = {}) {
 	let equal, deepEqual;
 	if (opts.strict) {
 		equal = assert.strictEqual;
@@ -140,12 +149,7 @@ export function testMethod(construct, method, cases, opts = {}) {
 				assertEqual(r, c.return, merge({msg: `return failed`}, opts));
 			}
 			if (c.props) { // check properties
-				if (typeof c.props != 'object') invalid(`'props' must be an object`);
-				for (let k in c.props) {
-					let v = c.props[k];
-					if (!(k in obj)) assert.fail(`no such property as '${k}'`);
-					assertEqual(obj[k], v, merge({msg: `property '${k}' failed`}, opts));
-				}
+				assertProps(obj, c.props, opts);
 			}
 			if (c.test) { // custom test
 				if (typeof c.test != 'function') invalid(`'test' must be a function`);
@@ -190,12 +194,7 @@ export function testInstance(construct, cases, opts = {}) {
 				obj = construct(...args);
 			}
 			if (c.props) { // check properties
-				if (typeof c.props != 'object') invalid(`'props' must be an object`);
-				for (let k in c.props) {
-					let v = c.props[k];
-					if (!(k in obj)) assert.fail(`no such property as '${k}'`);
-					assertEqual(obj[k], v, merge({msg: `property '${k}' failed`}, opts));
-				}
+				assertProps(obj, c.props, opts);
 			}
 			if (c.test) { // custom test
 				if (typeof c.test != 'function') invalid(`'test' must be a function`);

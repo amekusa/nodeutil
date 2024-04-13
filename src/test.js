@@ -98,6 +98,10 @@ export function testMethod(construct, method, cases, opts = {}) {
 					assertEqual(obj[k], v, Object.assign(opts, {msg: `property '${k}' failed`}));
 				}
 			}
+			if ('test' in c) { // custom test
+				if (typeof c.test != 'function') throw new InvalidTest(`'test' must be a function`);
+				c.test({return: r, instance: obj});
+			}
 		});
 	};
 	describe(construct.name + ' :: ' + method, () => {

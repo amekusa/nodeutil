@@ -61,7 +61,7 @@ export function testFn(fn, cases, opts = {}) {
 			// ---- call function ----
 			let r;
 			let args = [];
-			if ('args' in c) { // args to pass
+			if (c.args) { // args to pass
 				if (!Array.isArray(c.args)) invalid(`'args' must be an array`);
 				args = c.args;
 			}
@@ -73,7 +73,7 @@ export function testFn(fn, cases, opts = {}) {
 			if ('return' in c) { // check return
 				assertEqual(r, c.return, merge({msg: `return value failed`}, opts));
 			}
-			if ('test' in c) { // custom test
+			if (c.test) { // custom test
 				if (typeof c.test != 'function') invalid(`'test' must be a function`);
 				c.test(r);
 			}
@@ -127,7 +127,7 @@ export function testMethod(construct, method, cases, opts = {}) {
 			if (!(method in obj)) invalid(`no such method as '${method}`);
 			let r;
 			let args = [];
-			if ('args' in c) { // args to pass
+			if (c.args) { // args to pass
 				if (!Array.isArray(c.args)) invalid(`'args' must be an array`);
 				args = c.args;
 			}
@@ -139,14 +139,15 @@ export function testMethod(construct, method, cases, opts = {}) {
 			if ('return' in c) { // check return value
 				assertEqual(r, c.return, merge({msg: `return failed`}, opts));
 			}
-			if ('props' in c) { // check properties
+			if (c.props) { // check properties
+				if (typeof c.props != 'object') invalid(`'props' must be an object`);
 				for (let k in c.props) {
 					let v = c.props[k];
 					if (!(k in obj)) assert.fail(`no such property as '${k}'`);
 					assertEqual(obj[k], v, merge({msg: `property '${k}' failed`}, opts));
 				}
 			}
-			if ('test' in c) { // custom test
+			if (c.test) { // custom test
 				if (typeof c.test != 'function') invalid(`'test' must be a function`);
 				c.test(r, obj);
 			}
@@ -179,7 +180,7 @@ export function testInstance(construct, cases, opts = {}) {
 		it(title, () => {
 			let obj;
 			let args = [];
-			if ('args' in c) {
+			if (c.args) {
 				if (!Array.isArray(c.args)) invalid(`'args' must be an array`);
 				args = c.args;
 			}
@@ -188,14 +189,15 @@ export function testInstance(construct, cases, opts = {}) {
 			} catch (e) {
 				obj = construct(...args);
 			}
-			if ('props' in c) { // check properties
+			if (c.props) { // check properties
+				if (typeof c.props != 'object') invalid(`'props' must be an object`);
 				for (let k in c.props) {
 					let v = c.props[k];
 					if (!(k in obj)) assert.fail(`no such property as '${k}'`);
 					assertEqual(obj[k], v, merge({msg: `property '${k}' failed`}, opts));
 				}
 			}
-			if ('test' in c) { // custom test
+			if (c.test) { // custom test
 				if (typeof c.test != 'function') invalid(`'test' must be a function`);
 				c.test(obj);
 			}

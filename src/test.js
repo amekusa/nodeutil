@@ -108,32 +108,30 @@ export function testMethod(construct, method, cases, opts = {}) {
 			if (typeof c != 'object') invalid(`a test case must be an object`);
 			// ---- instantiate ----
 			let obj;
-			let initArgs = [];
-			if ('initArgs' in c) {
-				if (!Array.isArray(c.initArgs)) invalid(`'initArgs' must be an array`);
-				initArgs = c.initArgs;
-			}
-			try {
-				obj = new construct(...initArgs);
-			} catch (e) {
-				obj = construct(...initArgs);
+			if (opts.static) {
+				if (c.initArgs) invalid(`'initArgs' is not for static method`);
+				obj = construct;
+			} else {
+				let initArgs = [];
+				if (c.initArgs) {
+					if (!Array.isArray(c.initArgs)) invalid(`'initArgs' must be an array`);
+					initArgs = c.initArgs;
+				}
+				try {
+					obj = new construct(...initArgs);
+				} catch (e) {
+					obj = construct(...initArgs);
+				}
 			}
 			// ---- call method ----
+			if (!(method in obj)) invalid(`no such method as '${method}`);
 			let r;
 			let args = [];
 			if ('args' in c) { // args to pass
 				if (!Array.isArray(c.args)) invalid(`'args' must be an array`);
 				args = c.args;
 			}
-			if (opts.static) { // call method statically
-				let {constructor} = obj;
-				if (!constructor) invalid(`invalid constructor`);
-				if (!(method in constructor)) invalid(`no such method as '${method}`);
-				r = constructor[method](...args);
-			} else {
-				if (!(method in obj)) invalid(`no such method as '${method}`);
-				r = obj[method](...args);
-			}
+			r = obj[method](...args);
 			// ---- check ----
 			if ('returnType' in c) { // check return type
 				assertType(r, c.returnType, `return type failed`);
@@ -150,7 +148,7 @@ export function testMethod(construct, method, cases, opts = {}) {
 			}
 			if ('test' in c) { // custom test
 				if (typeof c.test != 'function') invalid(`'test' must be a function`);
-				c.test({return: r, instance: obj});
+				c.test(r, obj);
 			}
 		});
 	};

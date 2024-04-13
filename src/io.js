@@ -110,12 +110,3 @@ export function modifyStream(fn) {
 	});
 }
 
-export default {
-	find,
-	clean,
-	rm,
-	rmSync,
-	copy,
-	modifyStream,
-};
-

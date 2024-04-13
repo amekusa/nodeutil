@@ -6,11 +6,14 @@ const merge = Object.assign;
  * @author amekusa
  */
 
-class InvalidTest extends Error {
-}
-
+/**
+ * @private
+ */
 function invalid(...args) {
 	throw new InvalidTest(...args);
+}
+
+export class InvalidTest extends Error {
 }
 
 export function assertProps(obj, props, opts = {}) {
@@ -48,7 +51,7 @@ export function assertEqual(actual, expected, opts = {}) {
 	}
 }
 
-function assertType(value, type, msg = '') {
+export function assertType(value, type, msg = '') {
 	try {
 		if (typeof type == 'string') assert.equal(typeof value, type);
 		else assert.ok(value instanceof type);
@@ -218,11 +221,4 @@ export function testInstance(construct, cases, opts = {}) {
 		}
 	});
 }
-
-export default {
-	InvalidTest,
-	testFn,
-	testMethod,
-	testInstance,
-};
 

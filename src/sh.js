@@ -81,10 +81,3 @@ export function dev(set = undefined) {
 	return env.NODE_ENV == value;
 }
 
-export default {
-	exec,
-	args,
-	prod,
-	dev,
-};
-

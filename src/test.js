@@ -178,13 +178,18 @@ export function testMethod(construct, method, cases, opts = {}) {
  */
 export function testInstance(construct, cases, opts = {}) {
 	let testCase = (c, title) => {
-		let obj;
-		try {
-			obj = ('args' in c) ? new construct(...c.args) : new construct();
-		} catch (e) {
-			obj = ('args' in c) ? construct(...c.args) : construct();
-		}
 		it(title, () => {
+			let obj;
+			let args = [];
+			if ('args' in c) {
+				if (!Array.isArray(c.args)) invalid(`'args' must be an array`);
+				args = c.args;
+			}
+			try {
+				obj = new construct(...args);
+			} catch (e) {
+				obj = construct(...args);
+			}
 			if ('props' in c) { // check properties
 				for (let k in c.props) {
 					let v = c.props[k];

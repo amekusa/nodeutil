@@ -143,12 +143,8 @@ export function testInstance(construct, cases, opts = {}) {
 				}
 			}
 			if ('test' in c) { // custom test
-				if ('testArgs' in c) {
-					if (!Array.isArray(c.testArgs)) throw `invalid test case: 'testArgs' must be an array`;
-					c.test(obj, ...c.testArgs);
-				} else {
-					c.test(obj);
-				}
+				if (typeof c.test != 'function') throw new InvalidTest(`'test' must be a function`);
+				c.test(obj);
 			}
 		});
 	};

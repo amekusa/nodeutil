@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import * as fsp from 'node:fs/promises';
+import {join, basename, dirname, isAbsolute} from 'node:path';
 import {Transform} from 'node:stream';
 import {exec} from './sh.js';
 
@@ -7,6 +8,23 @@ import {exec} from './sh.js';
  * I/O Utils
  * @author amekusa
  */
+
+/**
+ * Searchs the given file path in the given directories.
+ * @param {string} file - File to find
+ * @param {string[]} dirs - Array of directories to search
+ * @param {object} [opts] - Options
+ * @return {string|boolean} found file path, or false if not found
+ */
+export function find(file, dirs = [], opts = {}) {
+	let {allowAbsolute = true} = opts;
+	if (allowAbsolute && isAbsolute(file)) return fs.existsSync(file) ? file : false;
+	for (let i = 0; i < dirs.length; i++) {
+		let find = join(dirs[i], file);
+		if (fs.existsSync(find)) return find;
+	}
+	return false;
+}
 
 /**
  * Deletes the contents of the given directory.
@@ -93,6 +111,7 @@ export function modifyStream(fn) {
 }
 
 export default {
+	find,
 	clean,
 	rm,
 	copy,

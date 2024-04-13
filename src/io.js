@@ -114,6 +114,7 @@ export default {
 	find,
 	clean,
 	rm,
+	rmSync,
 	copy,
 	modifyStream,
 };

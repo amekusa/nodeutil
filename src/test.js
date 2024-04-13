@@ -5,6 +5,9 @@ import assert from 'node:assert';
  * @author amekusa
  */
 
+class InvalidTest extends Error {
+}
+
 function assertEqual(actual, expected, opts = {}) {
 	let equal, deepEqual;
 	if (opts.strict) {
@@ -163,6 +166,7 @@ export function testInstance(construct, cases, opts = {}) {
 }
 
 export default {
+	InvalidTest,
 	testFn,
 	testMethod,
 	testInstance,

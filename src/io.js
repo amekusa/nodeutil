@@ -1,6 +1,8 @@
+import os from 'node:os';
 import fs from 'node:fs';
 import * as fsp from 'node:fs/promises';
 import {join, basename, dirname, isAbsolute} from 'node:path';
+import path from 'node:path';
 import {Transform} from 'node:stream';
 import {exec} from './sh.js';
 
@@ -8,6 +10,12 @@ import {exec} from './sh.js';
  * I/O Utils
  * @author amekusa
  */
+
+/**
+ * Alias of `os.homedir()`.
+ * @type {string}
+ */
+export const home = os.homedir();
 
 /**
  * Searchs the given file path in the given directories.
@@ -24,6 +32,18 @@ export function find(file, dirs = [], opts = {}) {
 		if (fs.existsSync(find)) return find;
 	}
 	return false;
+}
+
+/**
+ * Replaces the beginning `~` character with `os.homedir()`.
+ * @param {string} file - File path
+ * @return {string} modified `file`
+ */
+export function untilde(file) {
+	if (!file.startsWith('~')) return file;
+	if (file.length == 1) return home;
+	if (file.startsWith(path.sep, 1)) return home + file.substring(1);
+	return file;
 }
 
 /**

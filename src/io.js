@@ -36,12 +36,13 @@ export function find(file, dirs = [], opts = {}) {
 /**
  * Replaces the beginning `~` character with `os.homedir()`.
  * @param {string} file - File path
+ * @param {string} [replace=os.homedir()] - Replacement
  * @return {string} modified `file`
  */
-export function untilde(file) {
+export function untilde(file, replace = home) {
 	if (!file.startsWith('~')) return file;
-	if (file.length == 1) return home;
-	if (file.startsWith(path.sep, 1)) return home + file.substring(1);
+	if (file.length == 1) return replace;
+	if (file.startsWith(path.sep, 1)) return replace + file.substring(1);
 	return file;
 }
 

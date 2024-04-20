@@ -1,7 +1,6 @@
 import os from 'node:os';
 import fs from 'node:fs';
 import * as fsp from 'node:fs/promises';
-import {join, basename, dirname, isAbsolute} from 'node:path';
 import path from 'node:path';
 import {Transform} from 'node:stream';
 import {exec} from './sh.js';
@@ -26,9 +25,9 @@ export const home = os.homedir();
  */
 export function find(file, dirs = [], opts = {}) {
 	let {allowAbsolute = true} = opts;
-	if (allowAbsolute && isAbsolute(file)) return fs.existsSync(file) ? file : false;
+	if (allowAbsolute && path.isAbsolute(file)) return fs.existsSync(file) ? file : false;
 	for (let i = 0; i < dirs.length; i++) {
-		let find = join(dirs[i], file);
+		let find = path.join(dirs[i], file);
 		if (fs.existsSync(find)) return find;
 	}
 	return false;
@@ -91,8 +90,8 @@ export function copy(src, dst) {
 		default:
 			throw 'invalid type';
 		}
-		_dst = join(dst, _dst || basename(_src));
-		return fsp.mkdir(dirname(_dst), {recursive: true}).then(fsp.copyFile(_src, _dst));
+		_dst = path.join(dst, _dst || path.basename(_src));
+		return fsp.mkdir(path.dirname(_dst), {recursive: true}).then(fsp.copyFile(_src, _dst));
 	}));
 }
 

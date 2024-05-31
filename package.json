@@ -1,7 +1,7 @@
 {
   "name": "@amekusa/nodeutil",
   "private": false,
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "Utility library for NodeJS",
   "type": "module",
   "exports": {

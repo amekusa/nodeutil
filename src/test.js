@@ -87,7 +87,7 @@ export function testFn(fn, cases, opts = {}) {
 			}
 			if (c.test) { // custom test
 				if (typeof c.test != 'function') invalid(`'test' must be a function`);
-				c.test(r);
+				c.test(r, ...args);
 			}
 		});
 	};
@@ -156,7 +156,7 @@ export function testMethod(construct, method, cases, opts = {}) {
 			}
 			if (c.test) { // custom test
 				if (typeof c.test != 'function') invalid(`'test' must be a function`);
-				c.test(r, obj);
+				c.test(r, obj, ...args);
 			}
 		});
 	};
@@ -201,7 +201,7 @@ export function testInstance(construct, cases, opts = {}) {
 			}
 			if (c.test) { // custom test
 				if (typeof c.test != 'function') invalid(`'test' must be a function`);
-				c.test(obj);
+				c.test(obj, ...args);
 			}
 		});
 	};

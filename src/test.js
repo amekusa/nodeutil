@@ -145,6 +145,9 @@ export function testMethod(construct, method, cases, opts = {}) {
 			}
 			r = obj[method](...args);
 			// ---- check ----
+			if (c.returnsSelf) { // check if returns itself
+				assert.strictEqual(r, obj);
+			}
 			if ('returnType' in c) { // check return type
 				assertType(r, c.returnType, `return type failed`);
 			}

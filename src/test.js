@@ -99,7 +99,7 @@ export function testFn(fn, cases, opts = {}) {
 			}
 		});
 	};
-	describe(fn.displayName || fn.name, () => {
+	describe('function: ' + (fn.displayName || fn.name), () => {
 		if (Array.isArray(cases)) {
 			for (let i = 0; i < cases.length; i++) {
 				let c = cases[i];
@@ -159,7 +159,7 @@ export function testMethod(construct, method, cases, opts = {}) {
 			// ---- check the result ----
 			let check = {
 				returnsSelf() { // check if returns itself
-					assert.strictEqual(r, obj);
+					assert.strictEqual(r, obj, `must return self`);
 				},
 				returnType() { // check return type
 					assertType(r, c.returnType, `return type failed`);
@@ -181,7 +181,7 @@ export function testMethod(construct, method, cases, opts = {}) {
 			}
 		});
 	};
-	describe(construct.name + ' :: ' + method, () => {
+	describe('method: ' + method, () => {
 		if (Array.isArray(cases)) {
 			for (let i = 0; i < cases.length; i++) {
 				let c = cases[i];
